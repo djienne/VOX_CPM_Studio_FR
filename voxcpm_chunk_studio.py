@@ -727,15 +727,23 @@ def generate_current_chunk(
     with MODEL_LOCK:
         model = ensure_model(session["context_limit"])
         progress(0.2, desc="Generating chunk audio")
-        generate_and_store_chunk_audio(
-            session,
-            model,
-            session["current_index"],
-            cfg_value,
-            timesteps,
-            max_len,
-            seed,
-        )
+        try:
+            generate_and_store_chunk_audio(
+                session,
+                model,
+                session["current_index"],
+                cfg_value,
+                timesteps,
+                max_len,
+                seed,
+            )
+        except RuntimeError as e:
+            err_msg = str(e)
+            if "expanded size of the tensor" in err_msg and "must match the existing size" in err_msg:
+                match = re.search(r"existing size \((\d+)\)", err_msg)
+                req_size = match.group(1) if match else "more"
+                raise gr.Error(f"Context Limit Exceeded! This chunk requires at least {req_size} context limit (current: {session['context_limit']}). Please increase the 'Internal Context Limit' under Advanced Generation Settings.")
+            raise
 
     yield render_ui(
         session,
@@ -881,15 +889,23 @@ def generate_all_pending_chunks(
                 step / max(1, len(pending_indices)),
                 desc=f"Generating chunk {chunk_index + 1}/{len(session['chunks'])}",
             )
-            generate_and_store_chunk_audio(
-                session,
-                model,
-                chunk_index,
-                cfg_value,
-                timesteps,
-                max_len,
-                seed,
-            )
+            try:
+                generate_and_store_chunk_audio(
+                    session,
+                    model,
+                    chunk_index,
+                    cfg_value,
+                    timesteps,
+                    max_len,
+                    seed,
+                )
+            except RuntimeError as e:
+                err_msg = str(e)
+                if "expanded size of the tensor" in err_msg and "must match the existing size" in err_msg:
+                    match = re.search(r"existing size \((\d+)\)", err_msg)
+                    req_size = match.group(1) if match else "more"
+                    raise gr.Error(f"Context Limit Exceeded on chunk {chunk_index + 1}! It requires at least {req_size} context limit (current: {session['context_limit']}). Please increase the 'Internal Context Limit' under Advanced Generation Settings.")
+                raise
 
     session["current_index"] = pending_indices[0]
     yield render_ui(
@@ -983,7 +999,7 @@ def build_demo() -> gr.Blocks:
                 )
                 context_limit = gr.Slider(
                     minimum=384,
-                    maximum=768,
+                    maximum=2048,
                     step=32,
                     value=DEFAULT_CONTEXT_LIMIT,
                     label="Internal Context Limit",
