@@ -705,7 +705,6 @@ def generate_current_chunk(
     max_len: int,
     seed_value: int | None,
     force_new_seed: bool,
-    progress=gr.Progress(track_tqdm=False),
 ):
     """Generate one take for the currently selected chunk."""
     validate_generation_inputs(session, timesteps, max_len)
@@ -715,18 +714,24 @@ def generate_current_chunk(
     assert chunk is not None
 
     if not chunk["text"].strip():
-        raise gr.Error("The current chunk is empty.")
+        yield render_ui(session, "Error: The current chunk is empty.")
+        return
 
     # Yield intermediate state to clear audio player and reset playhead
     chunk["audio_path"] = None
     yield render_ui(session, "Preparing generation...")
 
     seed = resolve_seed(seed_value, force_new_seed)
-    progress(0.0, desc="Loading VoxCPM2 model")
+    yield render_ui(session, "Loading VoxCPM2 model...")
 
     with MODEL_LOCK:
-        model = ensure_model(session["context_limit"])
-        progress(0.2, desc="Generating chunk audio")
+        try:
+            model = ensure_model(session["context_limit"])
+        except Exception as e:
+            yield render_ui(session, f"Error loading model: {e}")
+            return
+            
+        yield render_ui(session, "Generating chunk audio...")
         try:
             generate_and_store_chunk_audio(
                 session,
@@ -742,8 +747,10 @@ def generate_current_chunk(
             if "expanded size of the tensor" in err_msg and "must match the existing size" in err_msg:
                 match = re.search(r"existing size \((\d+)\)", err_msg)
                 req_size = match.group(1) if match else "more"
-                raise gr.Error(f"Context Limit Exceeded! This chunk requires at least {req_size} context limit (current: {session['context_limit']}). Please increase the 'Internal Context Limit' under Advanced Generation Settings.")
-            raise
+                yield render_ui(session, f"Context Limit Exceeded! This chunk requires at least {req_size} context limit (current: {session['context_limit']}). Please increase the 'Internal Context Limit' under Advanced Generation Settings.")
+                return
+            yield render_ui(session, f"Error generating chunk: {e}")
+            return
 
     yield render_ui(
         session,
@@ -854,7 +861,6 @@ def generate_all_pending_chunks(
     cfg_value: float,
     timesteps: int,
     max_len: int,
-    progress=gr.Progress(track_tqdm=False),
 ):
     """Generate fresh takes for every chunk that still needs review."""
     validate_generation_inputs(session, timesteps, max_len)
@@ -876,8 +882,12 @@ def generate_all_pending_chunks(
     yield render_ui(session, "Preparing batch generation...")
 
     with MODEL_LOCK:
-        progress(0.0, desc="Loading VoxCPM2 model")
-        model = ensure_model(session["context_limit"])
+        yield render_ui(session, "Loading VoxCPM2 model...")
+        try:
+            model = ensure_model(session["context_limit"])
+        except Exception as e:
+            yield render_ui(session, f"Error loading model: {e}")
+            return
 
         for step, chunk_index in enumerate(pending_indices, start=1):
             chunk = session["chunks"][chunk_index]
@@ -885,10 +895,7 @@ def generate_all_pending_chunks(
                 continue
 
             seed = safe_random_seed()
-            progress(
-                step / max(1, len(pending_indices)),
-                desc=f"Generating chunk {chunk_index + 1}/{len(session['chunks'])}",
-            )
+            yield render_ui(session, f"Generating chunk {chunk_index + 1} of {len(session['chunks'])} ({step}/{len(pending_indices)} pending)...")
             try:
                 generate_and_store_chunk_audio(
                     session,
@@ -904,8 +911,10 @@ def generate_all_pending_chunks(
                 if "expanded size of the tensor" in err_msg and "must match the existing size" in err_msg:
                     match = re.search(r"existing size \((\d+)\)", err_msg)
                     req_size = match.group(1) if match else "more"
-                    raise gr.Error(f"Context Limit Exceeded on chunk {chunk_index + 1}! It requires at least {req_size} context limit (current: {session['context_limit']}). Please increase the 'Internal Context Limit' under Advanced Generation Settings.")
-                raise
+                    yield render_ui(session, f"Context Limit Exceeded on chunk {chunk_index + 1}! It requires at least {req_size} context limit (current: {session['context_limit']}). Please increase the 'Internal Context Limit' under Advanced Generation Settings.")
+                    return
+                yield render_ui(session, f"Error generating chunk {chunk_index + 1}: {e}")
+                return
 
     session["current_index"] = pending_indices[0]
     yield render_ui(
@@ -1144,14 +1153,14 @@ def build_demo() -> gr.Blocks:
             fn=_generate_current,
             inputs=[session_state, chunk_textbox, cfg_value, timesteps, max_len, seed_number],
             outputs=shared_outputs,
-            show_progress="minimal",
+            show_progress="hidden",
         )
 
         regenerate_button.click(
             fn=_regenerate_current,
             inputs=[session_state, chunk_textbox, cfg_value, timesteps, max_len, seed_number],
             outputs=shared_outputs,
-            show_progress="minimal",
+            show_progress="hidden",
         )
 
         def _generate_all_pending(session, text, cfg, steps, max_len_value):
@@ -1161,7 +1170,7 @@ def build_demo() -> gr.Blocks:
             fn=_generate_all_pending,
             inputs=[session_state, chunk_textbox, cfg_value, timesteps, max_len],
             outputs=shared_outputs,
-            show_progress="minimal",
+            show_progress="hidden",
         )
 
         approve_button.click(
