@@ -1,0 +1,15 @@
+Texte de test numéro 1.
+
+Bonjour. Il est 7 h 05, nous sommes le 13 avril 2026, et la température extérieure est de 12,4 degrés. À 8 h 30, le train 4827 partira voie 3, puis arrivera à 10 h 17 avec un retard estimé de 6 minutes.
+
+Le code de référence est A-2049-B-77, et le numéro de dossier est 00038156. Merci d’appeler le 01 42 56 78 90, ou le 06 11 22 33 44, avant le 15 mai 2026 à 18 h 00.
+
+Aujourd’hui, nous avons vendu 17 unités à 9,99 euros, 42 unités à 15,50 euros, et 103 unités à 1,25 euro. Le total provisoire est de 945,73 euros hors taxes, soit 1 134,88 euros TTC avec une TVA de 20 %.
+
+Les mesures relevées sont les suivantes : 1 mètre 82, 74 kilos, 2,5 litres, 0,75 litre, 14,08 kilomètres, 325 millimètres, et 3,14159 pour la valeur approchée de pi. Le capteur affiche aussi 0,003 seconde, puis 99,99 %, puis 100,00 %.
+
+La séquence de test contient les nombres suivants : 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 19, 20, 21, 30, 42, 58, 73, 84, 99, 100, 101, 110, 125, 200, 256, 512, 999, 1 000, 1 001, 10 000, 100 000, et 1 000 000.
+
+Veuillez également lire ces fractions : 1 sur 2, 1 sur 3, 2 sur 3, 3 sur 4, 5 sur 8, et 7 sur 10. Puis ces dates : 01/01/2000, 29/02/2024, 31/12/2025, et 13/04/2026.
+
+Enfin, test d’énonciation rapide : 22, 222, 2 222, 22 222, 222 222. Puis 33,3 ; 333,33 ; 3 333,333. Fin du test numéro 1.
