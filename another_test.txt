@@ -1,0 +1,7 @@
+Concernant la version qui tourne sur Hyperliquid, qui utilise le meme fichier de config qu'on a lancé dans ce tutoriel, on peut observer que depuis la dernière mise à jour — qui date d’environ une semaine, les performances ont continué de progresser. Le bot a généré quelques gains supplémentaires, on est à plus de 20% de gains sur le capital initial, en 63 jours, ce qui est plutôt encourageant.
+
+Il continue donc de bien performer, avec une activité régulière, vous pouvez voir les dernié trades exécutés ici.
+
+Si cette tendance se maintient, on se situe autour de 190% de rendement annualisé, ce qui est très solide.
+
+Du côté de la version qui tourne sur Lighter, avec une configuration différente, les résultats sont également très positifs. Le bot continue de progresser, avec un PnL actuel de 6,19 % sur une période d’environ vingt jours. En annualisant ces performances, on obtient un rendement proche de 203 %, ce qui est également très satisfaisant.

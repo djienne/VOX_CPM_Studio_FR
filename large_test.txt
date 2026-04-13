@@ -1,0 +1,35 @@
+Bienvenue dans ce tutoriel où nous allons installer, configurer et lancer Passive Bot sur Lighter en utilisant le fork disponible sur GitHub.
+
+Pour suivre cette vidéo, vous aurez besoin de plusieurs choses.
+
+Déja un Wallet Rabby ou n'importe quel autre portefeuille EVM; comme metamask. 
+
+Ce portefeuille doit contenir des fonds sur le réseau Arbitrum. 
+
+Ici j'ai par exemple quatre-vingt-dix-neuf USDC, et un peu d'Ethereum pour payer les frais de gaz.
+
+Nous découvrirons le site de Lighter un peu plus tard, mais vous aurez d'abord besoin d'une machine pour faire tourner le bot. 
+
+Dans ce tutoriel, nous allons utiliser un serveur VPS AWS, qui tourne sur une distribution Linux Ubuntu. Mais n'importe quel autre fournisseur comme Hostinger ou Digital Ocean fera l'affaire, d'autant plus que ces options sont moins chères et que la latence n'est pas primordiale.
+
+Vous pouvez même exécuter le bot sur votre ordinateur personnel ou sur un Raspberry Pi. La seule condition est de laisser l'appareil allumé en permanence avec une connexion internet stable. Il sera également nécessaire d'utiliser Docker pour faire tourner le programme en arrière-plan sans risquer de l'interrompre accidentellement, que ce soit sur un VPS ou sur votre machine à la maison.
+
+Ensuite vous aurez besoin d'accéder à la page GitHub où le code du fork de Passive Bot est disponible pour le cloner. 
+
+J'ai également préparé la page de documentation de Docker avec toutes les instructions pour installer docker facilement sur votre VPS. 
+
+Si vous avez des fonds sur un échangeur centralisé vous devez les envoyer sur votre wallet EVM. Si ils sont sur votre wallet mais sur une autre blockchain, vous pouvez utiliser une plateforme comme Jumper pour les transférer sur Arbitrum.
+
+Commençons maintenant le tutoriel en nous rendant sur le site de Lighter et en cliquant sur le bouton pour démarrer le trading. Comme j'utilise un nouveau portefeuille, je dois d'abord connecter mon wallet, choisir Rabby et signer l'autorisation. L'interface demande ensuite de créer un compte, ce qui nécessite d'effectuer un premier dépôt en sélectionnant nos crypto-monnaies.
+
+Nous allons déposer l'intégralité de nos quatre-vingt-dix-neuf USDC en utilisant une petite fraction d'Ethereum pour régler les frais de réseau. 
+
+La plateforme prélève un USDC de frais de dépot, et l'opération prend approximativement deux minutes. 
+
+Nous confirmons donc l'ordre et nous signons les différentes requêtes qui ne consomment que très peu de gaz sur la blockchain.
+
+Le processus de dépôt est en cours et comporte plusieurs étapes qu'il faut simplement laisser s'exécuter. 
+
+Une fois ce délai de deux minutes écoulé, notre dépôt est validé et les fonds sont disponibles sur la plateforme. Nous pouvons alors cliquer sur l'authentification et signer la dernière transaction qui ne nécessite aucun frais de gaz. Et toutes les futures connexions ne nécessiteront plus des frais de gaz.
+
+Ensuite on signe une nouvelle demande, et on accepte les conditions d'utilisation. Sur cette partie il est primordial de sélectionner le compte gratuit ou "Free" ici. Ne vous laissez pas séduire par le compte premium, car le compte "Free" vous permet de trader sans payer de commissions. C'est d'ailleurs précisément pour cette absence de frais de transaction que nous utilisons la plateforme Lighter dans ce tutoriel.
